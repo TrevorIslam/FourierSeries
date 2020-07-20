@@ -1,0 +1,35 @@
+body {
+  background-color: hsl(0, 0%, 73%);
+  display: grid;
+  grid-template-areas: "settings canvas";
+  grid-template-columns: 25% auto;
+  color: white;
+  height: 100%;
+  padding: 10px;
+  margin: 0%;
+}
+
+#settings-column {
+  grid-area: settings;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+#canvas-column {
+  grid-area: canvas;
+}
+
+.inline-canvas {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+li {
+  margin-top: 25px;
+  margin-right: 25px;
+  padding: 10px;
+}
+
+button {
+  margin-top: 25px;
+}
