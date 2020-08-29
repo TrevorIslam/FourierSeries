@@ -1,6 +1,8 @@
 var epicyclesArray = [];
 var drawing = [];
 
+var epiZoom = 1;
+
 const epicycles = (e) => {
   var t = 0;
   e.setup = () => {
@@ -18,16 +20,16 @@ const epicycles = (e) => {
     let y = 0;
     epicyclesArray.forEach((epi, i) => {
       if (epi.parent != null)  {
-        x += getVal("Zoom") * epi.parent.r * cos(epi.parent.w * t + epi.parent.phase);
-        y += getVal("Zoom") * epi.parent.r  * sin(epi.parent.w * t + epi.parent.phase);
+        x += epiZoom * epi.parent.r * cos(epi.parent.w * t + epi.parent.phase);
+        y += epiZoom * epi.parent.r  * sin(epi.parent.w * t + epi.parent.phase);
       }
       epi.draw(x, y, t, e);
     });
 
     let epi = epicyclesArray[epicyclesArray.length - 1];
 
-    x += getVal("Zoom") * epi.r * cos(epi.w * t + epi.phase);
-    y += getVal("Zoom") * epi.r * sin(epi.w * t + epi.phase);
+    x += epiZoom * epi.r * cos(epi.w * t + epi.phase);
+    y += epiZoom * epi.r * sin(epi.w * t + epi.phase);
     drawing.unshift(new Point(x, y, 30, 5));
     if (drawing.length > 2 * N) drawing.pop();
 
@@ -46,6 +48,7 @@ const epicycles = (e) => {
 let epicyclesp5 = new p5(epicycles, "epicyclescanvas");
 
 function createEpicycles () {
+  epiZoom = getVal("Zoom");
   drawing = [];
   calcLerpedInputs();
   calcOutputs(true);
@@ -76,11 +79,11 @@ class Epicycle {
   }
 
   draw (x, y, time, cnv) {
-    let armX = x + getVal("Zoom") * this.r * cos(this.w * time + this.phase);
-    let armY = y + getVal("Zoom") * this.r * sin(this.w * time + this.phase);
+    let armX = x + epiZoom * this.r * cos(this.w * time + this.phase);
+    let armY = y + epiZoom * this.r * sin(this.w * time + this.phase);
     cnv.noFill();
     cnv.stroke(this.hue, 100, 100);
-    cnv.circle(x, y, 2 * getVal("Zoom") * this.r);
+    cnv.circle(x, y, 2 * epiZoom * this.r);
     cnv.stroke(100,0,20);
     cnv.line(x, y, armX, armY);
   }

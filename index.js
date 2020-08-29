@@ -2,8 +2,9 @@ var x;
 var y;
 var ind = 0;
 var points = [];
-var lerpRes = 10;
+var lerpRes = 5;
 var N = (data.length - 2) / 2 * (lerpRes);
+
 var inputX = [];
 var inputY = [];
 var lerpedInputX = [];
@@ -39,7 +40,7 @@ const scanner = (s) => {
     let data = scan(getVal("Angular Velocity"), inputX);
 
     data.points.forEach((p) => {
-      p.draw(s);
+      p.draw(s, true);
     });
 
     s.fill(10, 100, 100);
@@ -58,7 +59,7 @@ function scan (w, input) {
 
   for (let t = 0; t < N; t++) {
     let dt = 2 * PI * t / N;
-    var amplitude = input[t] * getVal("Zoom");
+    var amplitude = input[t];
     let x = amplitude * cos(w * dt);
     let y = amplitude * sin(w * dt);
     let p = new Point(250 + x, 250 + y, 50);
@@ -67,8 +68,8 @@ function scan (w, input) {
     imaginary += y;
   }
 
-  real /= N * getVal("Zoom");
-  imaginary /= N * getVal("Zoom");
+  real /= N;
+  imaginary /= N;
 
   let freq = w;
   let amp = sqrt(real * real + imaginary * imaginary);
@@ -85,8 +86,8 @@ function calcLerpedInputs () {
     let next = new Vector(data[i + 2], data[i + 3]);
     for (let p = 0; p < .999999; p = p + 1/lerpRes, 2) {
       let v = current.lerp(next, p);
-      lerpedInputX.push(v.x * getVal("Zoom"));
-      lerpedInputY.push(v.y * getVal("Zoom"));
+      lerpedInputX.push(v.x);
+      lerpedInputY.push(v.y);
     }
   }
 }
@@ -95,8 +96,8 @@ function calcInputs () {
   inputX = [];
   inputY = [];
   for (let i = 0; i < data.length - 1; i += 2) {
-    inputX.push(data[i] * getVal("Zoom"));
-    inputY.push(data[i + 1] * getVal("Zoom"));
+    inputX.push(data[i]);
+    inputY.push(data[i + 1]);
   }
 }
 
@@ -119,25 +120,9 @@ $(document).ready(() => {
 })
 
 function attachSliderEvents () {
-  // $("#wslider").on("input", function(){
-  //   let val = parseFloat($(this).val());
-  //   getVal("Angular Velocity") = val;
-  //   $("#wvalue").text(val);
-  // })
-  // $("#zoomslider").on("input", function(){
-  //   let val = parseFloat($(this).val());
-  //   getVal("Zoom") = val;
-  //   drawing = [];
-  //   $("#zoomvalue").text(val);
-  // })
-  // $("#resslider").on("input", function(){
-  //   let val = parseFloat($(this).val());
-  //   //N = val;
-  //   drawing = [];
-  //   $("#resvalue").text(val);
-  // })
   $("input").on("input", function(){
     calcOutputs();
+    createEpicycles();
     $(this).siblings("span").text($(this).val());
   })
 }
